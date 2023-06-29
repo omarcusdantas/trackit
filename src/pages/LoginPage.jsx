@@ -65,6 +65,7 @@ export default function LoginPage() {
                     required
                     ref={inputEmailRef}
                     disabled={isDisabled}
+                    name="email"
                 />
                 <input
                     type="password"
@@ -72,6 +73,7 @@ export default function LoginPage() {
                     required
                     ref={inputPasswordRef}
                     disabled={isDisabled}
+                    name="password"
                 />
                 <label>
                     <input type="checkbox" ref={persistenceRef} disabled={isDisabled} />

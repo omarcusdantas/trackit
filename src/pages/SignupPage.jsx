@@ -89,14 +89,15 @@ export default function RegisterPage() {
         <LoginContainer rightPassword={rightPassword}>
             <img src={logo} alt="TrackIt" />
             <form onSubmit={handleForm}>
-                <input type="text" placeholder="name" ref={inputNameRef} disabled={isDisabled} minLength="2" />
-                <input type="text" placeholder="email" ref={inputEmailRef} disabled={isDisabled} />
+                <input type="text" placeholder="name" ref={inputNameRef} disabled={isDisabled} minLength="2" name="name"/>
+                <input type="text" placeholder="email" ref={inputEmailRef} disabled={isDisabled} name="email"/>
                 <input
                     type="password"
                     placeholder="password (5 characters min)"
                     ref={inputPasswordRef}
                     disabled={isDisabled}
                     minLength="5"
+                    name="password"
                 />
                 <input
                     type="password"
