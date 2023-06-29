@@ -19,6 +19,11 @@ const GlobalStyle = createGlobalStyle`
         font-family: "Lexend Deca", sans-serif;
         color: #666666;
     }
+
+    .swal2-icon {
+        justify-self: center;
+        margin-top: 20px;
+    }
 `;
 
 export default GlobalStyle;

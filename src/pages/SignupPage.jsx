@@ -4,6 +4,8 @@ import React, { useRef, useState } from "react";
 import { LoginContainer } from "../styles/template";
 import logo from "../assets/logo.png";
 import { ThreeDots } from "react-loader-spinner";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 
 export default function RegisterPage() {
     const inputEmailRef = useRef(null);
@@ -13,6 +15,7 @@ export default function RegisterPage() {
     const [rightPassword, setRightPassword] = useState(true);
     const [isDisabled, setIsDisabled] = useState(false);
     const navigate = useNavigate();
+    const MySwal = withReactContent(Swal);
 
     function passwordsMatch(event) {
         setRepeatPassword(event.target.value);
@@ -22,6 +25,31 @@ export default function RegisterPage() {
             return;
         }
         setRightPassword(true);
+    }
+
+    function successSignup() {
+        setIsDisabled(false);
+        let timeoutId;
+
+        MySwal
+            .fire({
+                icon: "success",
+                title: "Account created!",
+                confirmButtonText: "Go to Login",
+                footer: "Or wait 5 seconds for redirect",
+                didOpen: () => {
+                    timeoutId = setTimeout(() => {
+                        MySwal.close();
+                        navigate("/");
+                    }, 5000);
+                },
+            })
+            .then((result) => {
+                if (result.isConfirmed) {
+                    clearTimeout(timeoutId);
+                    navigate("/");
+                }
+            });
     }
 
     function handleForm(event) {
@@ -47,10 +75,7 @@ export default function RegisterPage() {
 
         axios
             .post("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/auth/sign-up", data)
-            .then(() => {
-                setIsDisabled(false);
-                navigate("/");
-            })
+            .then(() => successSignup())
             .catch((error) => {
                 setIsDisabled(false);
                 if (error.response && error.response.status === 409) {
@@ -64,25 +89,11 @@ export default function RegisterPage() {
         <LoginContainer rightPassword={rightPassword}>
             <img src={logo} alt="TrackIt" />
             <form onSubmit={handleForm}>
-                <input
-                    type="text"
-                    placeholder="name"
-                    required
-                    ref={inputNameRef}
-                    disabled={isDisabled}
-                    minLength="2"
-                />
-                <input
-                    type="text"
-                    placeholder="email"
-                    required
-                    ref={inputEmailRef}
-                    disabled={isDisabled}
-                />
+                <input type="text" placeholder="name" ref={inputNameRef} disabled={isDisabled} minLength="2" />
+                <input type="text" placeholder="email" ref={inputEmailRef} disabled={isDisabled} />
                 <input
                     type="password"
                     placeholder="password (5 characters min)"
-                    required
                     ref={inputPasswordRef}
                     disabled={isDisabled}
                     minLength="5"
@@ -91,7 +102,6 @@ export default function RegisterPage() {
                     type="password"
                     placeholder="repeat password"
                     id="check-password"
-                    required
                     onChange={(event) => passwordsMatch(event)}
                     value={repeatPassword}
                     disabled={isDisabled}
@@ -99,9 +109,7 @@ export default function RegisterPage() {
                 <button type="submit" disabled={isDisabled}>
                     {isDisabled ? <ThreeDots height="13px" color="#ffffff" /> : "Sign-up"}
                 </button>
-                <Link to="/">
-                    Do you already have an account? Log in!
-                </Link>
+                <Link to="/">Do you already have an account? Log in!</Link>
             </form>
         </LoginContainer>
     );

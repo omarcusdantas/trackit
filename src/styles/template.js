@@ -82,9 +82,8 @@ export const LoginContainer = styled.div`
         background-color: ${(props) => {
             if (props.rightPassword) {
                 return;
-            } 
-                console.log (props.rightPassword)
-                return "#F9C0C0";
+            }
+            return "#F9C0C0";
         }};
     }
 `;
