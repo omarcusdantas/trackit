@@ -77,6 +77,16 @@ export const LoginContainer = styled.div`
         width: 23px;
         height: 23px;
     }
+
+    #check-password {
+        background-color: ${(props) => {
+            if (props.rightPassword) {
+                return;
+            } 
+                console.log (props.rightPassword)
+                return "#F9C0C0";
+        }};
+    }
 `;
 
 export const PageContainer = styled.div`
