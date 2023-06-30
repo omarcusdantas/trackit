@@ -38,6 +38,7 @@ export default function LoginPage() {
             .then((response) => {
                 setIsDisabled(false);
                 const newUserData = {
+                    name: response.data.name,
                     token: response.data.token,
                     progress: 0,
                 };
