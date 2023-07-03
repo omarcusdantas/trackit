@@ -106,10 +106,12 @@ export const Main = styled.div`
 export const Title = styled.div`
     min-height: 35px;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: end;
+    position: relative;
 
     h2 {
+        text-align: center;
         font-size: 23px;
         color: #126BA5;
     }
@@ -119,22 +121,15 @@ export const Title = styled.div`
         height: 35px;
         background-color: #52B6FF;
         border-radius: 4.6px;
-        position: relative;
+        position: absolute;
+        right: 0;
 
         p {
             color: #ffffff;
             font-size: 27px;
             position: absolute;
             top: -2px;
-            left: 12.7px;
-        }
-
-        ion-icon {
-            position: absolute;
-            color: #ffffff;
-            font-size: 30px;
-            top: 2px;
-            left: 5px;
+            left: 11.7px;
         }
     }
 
