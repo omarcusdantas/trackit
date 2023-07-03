@@ -12,7 +12,7 @@ export default function Menu() {
         <MenuBar>
             <MenuContainer>
                 <Link to="/habits">
-                    Hábitos
+                    Habits
                 </Link>
                 <Link to="/today">
                     <ProgressContainer>
@@ -33,7 +33,7 @@ export default function Menu() {
                     </ProgressContainer>
                 </Link>
                 <Link to="/history">
-                    Histórico
+                    History
                 </Link>
             </MenuContainer>
         </MenuBar>

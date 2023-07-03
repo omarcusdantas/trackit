@@ -96,10 +96,11 @@ export const PageContainer = styled.div`
 `;
 
 export const Main = styled.div`
-    width: 375px;
+    width: 100%;
+    max-width: 1000px;
     margin-top: 92px;
     margin-bottom: 115px;
-    padding: 0 18px;
+    padding: 0 20px;
 `;
 
 export const Title = styled.div`
@@ -149,6 +150,7 @@ export const Container = styled.div`
         font-size: 18px;
         color: #666666;
         line-height: 22px;
+        text-align: center;
     }
 `;
 
