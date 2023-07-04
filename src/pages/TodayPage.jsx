@@ -58,6 +58,7 @@ export default function TodayPage() {
                     <>
                         <Title>
                             <TitleContainer>
+                                <TitleSpace></TitleSpace>
                                 <TodayDate></TodayDate>
                                 <ProgressContainer dailyProgress={userData && userData.progress}>
                                     {userData &&
@@ -102,4 +103,8 @@ const TitleContainer = styled.div`
     display: flex;
     flex-direction: column;
     gap: 10px;
+`;
+
+const TitleSpace = styled.div`
+    height: 8px;
 `;

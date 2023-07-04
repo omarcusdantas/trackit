@@ -71,11 +71,11 @@ const ProgressContainer = styled.div`
     width: 91px;
     position: absolute;
     bottom: 10px;
-    left: 136px;
+    left: 139.5px;
     overflow: hidden;
     border-radius: 50%;
 
     @media (max-width: 350px) {
-        left: 110px;
+        left: 112px;
     }
 `;

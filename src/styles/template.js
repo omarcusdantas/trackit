@@ -97,10 +97,10 @@ export const PageContainer = styled.div`
 
 export const Main = styled.div`
     width: 100%;
-    max-width: 1000px;
+    max-width: 935px;
     margin-top: 92px;
     margin-bottom: 115px;
-    padding: 0 20px;
+    padding: 0 15px;
 `;
 
 export const Title = styled.div`
