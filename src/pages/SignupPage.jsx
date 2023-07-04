@@ -66,7 +66,7 @@ export default function RegisterPage() {
             return;
         }
 
-        if (data.name.length < 2 || data.password.length < 4) {
+        if (data.name.length < 2 || data.password.length < 4 || data.name.length > 15 || data.name.length > 20) {
             alert ("Fill in the form fields correctly.");
             return;
         }
@@ -89,15 +89,33 @@ export default function RegisterPage() {
         <LoginContainer rightPassword={rightPassword}>
             <img src={logo} alt="TrackIt" />
             <form onSubmit={handleForm}>
-                <input type="text" placeholder="name" ref={inputNameRef} disabled={isDisabled} minLength="2" name="name"/>
-                <input type="text" placeholder="email" ref={inputEmailRef} disabled={isDisabled} name="email"/>
+                <input 
+                    type="text" 
+                    placeholder="name" 
+                    ref={inputNameRef} 
+                    disabled={isDisabled} 
+                    minLength="2"
+                    maxLength="15" 
+                    name="name"
+                    required
+                />
+                <input 
+                    type="text" 
+                    placeholder="email" 
+                    ref={inputEmailRef} 
+                    disabled={isDisabled} 
+                    name="email"
+                    required
+                />
                 <input
                     type="password"
                     placeholder="password (5 characters min)"
                     ref={inputPasswordRef}
                     disabled={isDisabled}
                     minLength="5"
+                    maxLength="20"
                     name="password"
+                    required
                 />
                 <input
                     type="password"
@@ -106,6 +124,7 @@ export default function RegisterPage() {
                     onChange={(event) => passwordsMatch(event)}
                     value={repeatPassword}
                     disabled={isDisabled}
+                    required
                 />
                 <button type="submit" disabled={isDisabled}>
                     {isDisabled ? <ThreeDots height="13px" color="#ffffff" /> : "Sign-up"}
