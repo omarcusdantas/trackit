@@ -6,26 +6,17 @@ import logo from "../assets/logo.png";
 import { ThreeDots } from "react-loader-spinner";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import PasswordInput from "../components/PasswordInput";
 
 export default function RegisterPage() {
     const inputEmailRef = useRef(null);
     const inputPasswordRef = useRef(null);
     const inputNameRef = useRef(null);
-    const [repeatPassword, setRepeatPassword] = useState("");
-    const [rightPassword, setRightPassword] = useState(true);
     const [isDisabled, setIsDisabled] = useState(false);
+    const [rightPassword, setRightPassword] = useState(true);
+    const [repeatPassword, setRepeatPassword] = useState("");
     const navigate = useNavigate();
     const MySwal = withReactContent(Swal);
-
-    function passwordsMatch(event) {
-        setRepeatPassword(event.target.value);
-
-        if (inputPasswordRef.current.value !== event.target.value) {
-            setRightPassword(false);
-            return;
-        }
-        setRightPassword(true);
-    }
 
     function successSignup() {
         setIsDisabled(false);
@@ -107,25 +98,14 @@ export default function RegisterPage() {
                     name="email"
                     required
                 />
-                <input
-                    type="password"
-                    placeholder="password (5 characters min)"
-                    ref={inputPasswordRef}
-                    disabled={isDisabled}
-                    minLength="5"
-                    maxLength="20"
-                    name="password"
-                    required
-                />
-                <input
-                    type="password"
-                    placeholder="repeat password"
-                    id="check-password"
-                    onChange={(event) => passwordsMatch(event)}
-                    value={repeatPassword}
-                    disabled={isDisabled}
-                    required
-                />
+                <PasswordInput
+                    isSignup={true}
+                    inputPasswordRef={inputPasswordRef}
+                    isDisabled={isDisabled}
+                    setRepeatPassword={setRepeatPassword}
+                    setRightPassword={setRightPassword}
+                    rightPassword={rightPassword}
+                ></PasswordInput>
                 <button type="submit" disabled={isDisabled}>
                     {isDisabled ? <ThreeDots height="13px" color="#ffffff" /> : "Sign-up"}
                 </button>

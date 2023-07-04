@@ -5,6 +5,7 @@ import axios from "axios";
 import React, { useRef, useContext, useEffect, useState } from "react";
 import { ThreeDots } from "react-loader-spinner";
 import { UserContext } from "../UserContext";
+import PasswordInput from "../components/PasswordInput";
 
 export default function LoginPage() {
     const inputEmailRef = useRef(null);
@@ -68,14 +69,11 @@ export default function LoginPage() {
                     disabled={isDisabled}
                     name="email"
                 />
-                <input
-                    type="password"
-                    placeholder="password"
-                    required
-                    ref={inputPasswordRef}
-                    disabled={isDisabled}
-                    name="password"
-                />
+                <PasswordInput
+                    isSignup={false}
+                    inputPasswordRef={inputPasswordRef}
+                    isDisabled={isDisabled}
+                ></PasswordInput>
                 <label>
                     <input type="checkbox" ref={persistenceRef} disabled={isDisabled} />
                     Remember me

@@ -32,7 +32,7 @@ export const LoginContainer = styled.div`
         }
     }
 
-    button {
+    button[type="submit"] {
         display: flex;
         justify-content: center;
         align-items: center;
@@ -53,6 +53,20 @@ export const LoginContainer = styled.div`
         &:not(:disabled):hover {
             background-color: #5470FF;
         }
+    }
+
+    div {
+        position: relative;
+    }
+
+    div>button {
+        position: absolute;
+        padding: 0;
+        background-color: transparent;
+        font-size: 30px;
+        color: #757575;
+        top: 7px;
+        right: 7px;
     }
 
     a {
