@@ -8,6 +8,7 @@ import axios from "axios";
 import dayjs from 'dayjs';
 import { CalendarContainer } from "../styles/Calendar";
 import DailyHabit from "../components/DailyHabit";
+import LoadingScreen from "../components/LoadingScreen";
 
 export default function HistoricPage() {
     const { userData } = React.useContext(UserContext);
@@ -15,6 +16,7 @@ export default function HistoricPage() {
     const [selectedDate, setSelectedDate] = React.useState(null);
     const [showHabits, setShowHabits] = React.useState(false);
     const [habitsInfo, setHabitsInfo] = React.useState({});
+    const [pageLoading, setPageLoading] = React.useState(true);
 
     React.useEffect(() => {
         if (userData && userData.token) {
@@ -22,7 +24,7 @@ export default function HistoricPage() {
                 .get("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/history/daily", { headers: {"Authorization" : `Bearer ${userData.token}`}})
                 .then((response) => {
                     setHistory(response.data);
-                    console.log(response.data)
+                    setPageLoading(false);
                 })
                 .catch((error) => {
                     console.log(error);
@@ -70,9 +72,12 @@ export default function HistoricPage() {
             {
                 !showHabits &&
                 <Main>
-                    <Title>
-                        <h2>History</h2>
-                    </Title>
+                    {   pageLoading?
+                        <LoadingScreen></LoadingScreen> :
+                        <>
+                        <Title>
+                            <h2>History</h2>
+                        </Title>
                         <CalendarContainer>
                             <Calendar
                                 className="react-calendar"
@@ -84,6 +89,8 @@ export default function HistoricPage() {
                                 maxDate={new Date()}
                             ></Calendar>
                         </CalendarContainer>
+                        </>
+                    }
                 </Main>
             }
             {

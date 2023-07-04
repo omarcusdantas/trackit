@@ -7,10 +7,12 @@ import axios from "axios";
 import { PageContainer, Main, Title, Container } from "../styles/template";
 import styled from "styled-components";
 import TodayDate from "../components/TodayDate";
+import LoadingScreen from "../components/LoadingScreen";
 
 export default function TodayPage() {
     const { userData, setUserData } = React.useContext(UserContext);
     const [dailyHabits, setDailyHabits] = React.useState([]);
+    const [pageLoading, setPageLoading] = React.useState(true);
 
     function updateProgress(habits) {
         let total = 0;
@@ -24,56 +26,61 @@ export default function TodayPage() {
     }
 
     function getDailyHabits(setIsLoading) {
-        if (userData && userData.token) {
-          axios
+        axios
             .get("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/today", {
-              headers: { "Authorization": `Bearer ${userData.token}` }
+                headers: { "Authorization": `Bearer ${userData.token}` }
             })
             .then((response) => {
-              if (setIsLoading) {
-                setIsLoading(false);
-              }
-      
-              setDailyHabits(response.data);
-              updateProgress(response.data);
+                if (setIsLoading) {
+                    setIsLoading(false);
+                }
+                setPageLoading(false);
+                setDailyHabits(response.data);
+                updateProgress(response.data);
             })
             .catch((error) => {
-              console.log(error);
+                console.log(error);
             });
-        }
     }
 
     React.useEffect(() => {
-        getDailyHabits();
+        if (userData && userData.token) {
+            getDailyHabits();
+        }
     }, []);
 
     return (
         <PageContainer>
             <TopBar></TopBar>
             <Main>
-                <Title>
-                    <TitleContainer>
-                        <TodayDate></TodayDate>
-                        <ProgressContainer dailyProgress={userData && userData.progress}>
-                            {userData &&
-                                (userData.progress === 0 || isNaN(userData.progress)
-                                    ? `No habits completed yet`
-                                    : `${userData.progress}% of habits completed`)}
-                        </ProgressContainer>
-                    </TitleContainer>
-                </Title>
-                <Container>
-                    {dailyHabits.length === 0 && <p>Nothing to do today.</p>}
-                    {dailyHabits.length !== 0 &&
-                        dailyHabits.map((dailyHabit, index) => (
-                            <DailyHabit
-                                key={index}
-                                info={dailyHabit}
-                                token={userData.token}
-                                updateDailyHabits={getDailyHabits}
-                            ></DailyHabit>
-                        ))}
-                </Container>
+                {   pageLoading? 
+                    <LoadingScreen></LoadingScreen> :
+                    <>
+                        <Title>
+                            <TitleContainer>
+                                <TodayDate></TodayDate>
+                                <ProgressContainer dailyProgress={userData && userData.progress}>
+                                    {userData &&
+                                        (userData.progress === 0 || isNaN(userData.progress)
+                                            ? `No habits completed yet`
+                                            : `${userData.progress}% of habits completed`)}
+                                </ProgressContainer>
+                            </TitleContainer>
+                        </Title>
+                        <Container>
+                            {dailyHabits.length === 0 && <p>Nothing to do today.</p>}
+                            {dailyHabits.length !== 0 &&
+                                dailyHabits.map((dailyHabit, index) => (
+                                    <DailyHabit
+                                        key={index}
+                                        info={dailyHabit}
+                                        token={userData.token}
+                                        updateDailyHabits={getDailyHabits}
+                                    ></DailyHabit>
+                                ))}
+                        </Container>
+                    </>
+                }
             </Main>
             <Menu></Menu>
         </PageContainer>
