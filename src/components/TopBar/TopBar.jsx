@@ -39,7 +39,7 @@ export default function TopBar() {
             <Container>
                 <h1>TrackIt</h1>
                 <UserContainer>
-                    <h2>{userData.name? userData.name : ""}</h2>
+                    <h2>{userData && userData.name? userData.name : ""}</h2>
                     <button onClick={logout}><LogoutIcon /></button>
                 </UserContainer>
             </Container>

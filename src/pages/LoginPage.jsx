@@ -11,7 +11,7 @@ export default function LoginPage() {
     const [isDisabled, setIsDisabled] = useState(false);
     const [inputPassword, setInputPassword] = useState("");
     const inputRefEmail = useRef(null);
-    const inputRefPersistence = useRef(null);
+    const persistenceRef = useRef(null);
     const { setUserData } = useContext(UserContext);
     const navigate = useNavigate();
 
@@ -36,7 +36,7 @@ export default function LoginPage() {
                 };
                 setUserData(newUserData);
 
-                if (inputRefPersistence.checked) {
+                if (persistenceRef.current.checked) {
                     localStorage.setItem("user", JSON.stringify(newUserData));
                 }
 
@@ -80,7 +80,7 @@ export default function LoginPage() {
                 <label>
                     <input 
                         type="checkbox" 
-                        ref={inputRefPersistence} 
+                        ref={persistenceRef}
                         disabled={isDisabled} 
                     />
                     Remember me
