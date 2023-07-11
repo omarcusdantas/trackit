@@ -94,7 +94,7 @@ export default function RegisterPage() {
                     required
                 />
                 <input 
-                    type="text" 
+                    type="email" 
                     placeholder="email" 
                     ref={inputRefEmail} 
                     disabled={isDisabled} 

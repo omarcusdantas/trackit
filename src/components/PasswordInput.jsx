@@ -32,13 +32,13 @@ export default function PasswordInput(props) {
         <>
             <div>
                 <input
-                    type={showPassword ? "text" : "password"}
+                    type={showPassword? "text" : "password"}
                     placeholder="password"
                     onChange={(event) => setInputPassword(event.target.value)}
                     value={inputPassword}
                     disabled={isDisabled}
-                    minLength={isSignup ? "4" : undefined}
-                    maxLength={isSignup ? "20" : undefined}
+                    minLength={isSignup? "4" : undefined}
+                    maxLength={isSignup? "20" : undefined}
                     name="password"
                     required
                 />
@@ -48,8 +48,8 @@ export default function PasswordInput(props) {
             </div>
             {isSignup && 
                 <input
-                    type={showPassword ? "text" : "password"}
-                    placeholder="repeat password"
+                    type={showPassword? "text" : "password"}
+                    placeholder="confirm password"
                     id="check-password"
                     onChange={(event) => passwordsMatch(event.target.value)}
                     value={repeatPassword}
