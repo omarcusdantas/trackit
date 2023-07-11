@@ -16,11 +16,11 @@ export default function HistoricPage() {
     const { userData } = useContext(UserContext);
     const [pageState, setPageState] = useState({
         history: [],
-        selectedDate: null,
         showHabits: false,
         habitsInfo: {},
         pageLoading: true,
     });
+    const [selectedDate, setSelectedDate] = useState(null);
 
     // Check if there is any daily habit on clicked day and shows on screen
     function handleDateChange(date) {
@@ -38,10 +38,7 @@ export default function HistoricPage() {
                 showHabits: true,
             });
         }
-        setPageState({
-            ...pageState,
-            selectedDate: date,
-        });
+        setSelectedDate(date);
     }
 
     // Set colors of dates depending on user's completion of daily habits
@@ -103,7 +100,7 @@ export default function HistoricPage() {
                                     weekStartsOn={0}
                                     tileClassName={tileClassName}
                                     onChange={handleDateChange}
-                                    value={pageState.selectedDate}
+                                    value={selectedDate}
                                     maxDate={new Date()}
                                 ></Calendar>
                             </CalendarContainer>
@@ -122,7 +119,7 @@ export default function HistoricPage() {
                             <DailyHabit 
                                 key={index}
                                 info={dailyHabit}
-                                isDisable={true}
+                                isDisabled={true}
                             />
                         ))}
                     </Container>
