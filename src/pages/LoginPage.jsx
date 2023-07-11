@@ -1,37 +1,28 @@
+import { useRef, useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { LoginContainer } from "../styles/template";
-import logo from "../assets/logo.png";
-import axios from "axios";
-import React, { useRef, useContext, useEffect, useState } from "react";
-import { ThreeDots } from "react-loader-spinner";
 import { UserContext } from "../UserContext";
+import axios from "axios";
+import { ThreeDots } from "react-loader-spinner";
+import { LoginContainer } from "../styles/template";
 import PasswordInput from "../components/PasswordInput";
+import logo from "../assets/logo.png";
 
 export default function LoginPage() {
-    const inputEmailRef = useRef(null);
-    const inputPasswordRef = useRef(null);
-    const persistenceRef = useRef(null);
     const [isDisabled, setIsDisabled] = useState(false);
+    const [inputPassword, setInputPassword] = useState("");
+    const inputRefEmail = useRef(null);
+    const inputRefPersistence = useRef(null);
     const { setUserData } = useContext(UserContext);
     const navigate = useNavigate();
 
-    useEffect(() => {
-        const storedUser = localStorage.getItem("user");
-
-        if (storedUser) {
-            const user = JSON.parse(storedUser);
-            setUserData(user);
-            navigate("/today");
-        }
-    }, []);
-
+    // Send inputs to API and store user's login info in local storage if persistence is enabled
     function handleForm(event) {
         event.preventDefault();
         setIsDisabled(true);
 
         const data = {
-            email: inputEmailRef.current.value,
-            password: inputPasswordRef.current.value,
+            email: inputRefEmail.current.value,
+            password: inputPassword,
         };
 
         axios
@@ -45,17 +36,28 @@ export default function LoginPage() {
                 };
                 setUserData(newUserData);
 
-                if (persistenceRef.current.checked) {
+                if (inputRefPersistence.checked) {
                     localStorage.setItem("user", JSON.stringify(newUserData));
                 }
 
                 navigate("/today");
             })
-            .catch(() => {
+            .catch((error) => {
                 setIsDisabled(false);
-                alert("The email or password is incorrect. Please try again.");
+                alert(error);
             });
     }
+
+    // Check if user login information is saved on local storage
+    useEffect(() => {
+        const storedUser = localStorage.getItem("user");
+
+        if (storedUser) {
+            const user = JSON.parse(storedUser);
+            setUserData(user);
+            navigate("/today");
+        }
+    }, []);
 
     return (
         <LoginContainer>
@@ -65,17 +67,22 @@ export default function LoginPage() {
                     type="email"
                     placeholder="email"
                     required
-                    ref={inputEmailRef}
+                    ref={inputRefEmail}
                     disabled={isDisabled}
                     name="email"
                 />
                 <PasswordInput
                     isSignup={false}
-                    inputPasswordRef={inputPasswordRef}
+                    inputPassword={inputPassword}
+                    setInputPassword={setInputPassword}
                     isDisabled={isDisabled}
-                ></PasswordInput>
+                />
                 <label>
-                    <input type="checkbox" ref={persistenceRef} disabled={isDisabled} />
+                    <input 
+                        type="checkbox" 
+                        ref={inputRefPersistence} 
+                        disabled={isDisabled} 
+                    />
                     Remember me
                 </label>
                 <button type="submit" disabled={isDisabled}>

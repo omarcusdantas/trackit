@@ -1,83 +1,87 @@
-import React from "react";
-import Menu from "../components/Menu";
-import TopBar from "../components/TopBar";
-import AddHabit from "../components/AddHabit";
-import Habit from "../components/Habit";
+// Page to add and exclude habits
+
+import { useEffect, useState, useContext } from "react";
 import { UserContext } from "../UserContext";
 import axios from "axios";
 import { PageContainer, Main, Title, Container } from "../styles/template";
 import LoadingScreen from "../components/LoadingScreen";
+import Menu from "../components/Menu";
+import TopBar from "../components/TopBar/TopBar";
+import AddHabit from "../components/AddHabit/AddHabit";
+import Habit from "../components/Habit";
 
 export default function HabitsPage() {
-    const [isAddHabit, setIsAddHabit] = React.useState(false);
-    const [habits, setHabits] = React.useState([]);
-    const { userData } = React.useContext(UserContext);
-    const [pageLoading, setPageLoading] = React.useState(true);
+    const [isAddHabit, setIsAddHabit] = useState(false);
+    const [habits, setHabits] = useState([]);
+    const { userData } = useContext(UserContext);
+    const [pageLoading, setPageLoading] = useState(true);
 
+    // Get user's habits from API
     function getHabits() {
         axios
-            .get("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits", { headers: {"Authorization" : `Bearer ${userData.token}`}})
+            .get("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits", {
+                headers: {"Authorization" : `Bearer ${userData.token}` },
+            })
             .then((response) => {
+                if (pageLoading) {
+                    setPageLoading(false);
+                }
+
                 setHabits(response.data);
-                setPageLoading(false);
             })
             .catch((error) => {
                 console.log(error);
+                alert(error);
             });
     }
 
-    React.useEffect(() => {
+    // Get user's habits when page loads
+    useEffect(() => {
         if (userData && userData.token) {
             getHabits();
         }
     }, []);
 
-    function toggleAddHabit() {
-        setIsAddHabit(!isAddHabit);
-    }
-
     return (
         <PageContainer>
-            <TopBar></TopBar>
+            <TopBar />
             <Main>
-                    {   pageLoading?
-                        <LoadingScreen></LoadingScreen>:
-                        <>
-                            <Title>
-                                <h2>My Habits</h2>
-                                <button onClick={toggleAddHabit}><p>+</p></button>
-                            </Title>
-                            {   
-                                isAddHabit &&
-                                <AddHabit 
-                                    toggleAddHabit={toggleAddHabit} 
-                                    updateHabits={getHabits} 
-                                    token={userData.token}
-                                ></AddHabit>
+                {pageLoading?
+                    <LoadingScreen /> :
+                    (<>
+                        <Title>
+                            <h2>My Habits</h2>
+                            <button onClick={() => setIsAddHabit(!isAddHabit)}><p>+</p></button>
+                        </Title>
+                        {   
+                            isAddHabit &&
+                            <AddHabit 
+                                toggleAddHabit={setIsAddHabit} 
+                                updateHabits={getHabits} 
+                                token={userData.token}
+                            />
+                        }
+                        <Container>
+                            {habits.length == 0 &&
+                                <p>Add a habit to start tracking it</p>
                             }
-                            <Container>
-                                {
-                                    habits.length == 0 &&
-                                    <p>Você não tem nenhum hábito cadastrado ainda. Adicione um hábito para começar a trackear!</p>
-                                }
-                                {
-                                    habits.length !== 0 &&
-                                    habits.map((habit, index) => (
-                                        <Habit 
-                                            key={index} 
-                                            info={habit.name} 
-                                            days={habit.days} 
-                                            habitId={habit.id} 
-                                            updateHabits={getHabits} 
-                                            token={userData.token}
-                                        ></Habit>
-                                    ))
-                                }
-                            </Container>
-                        </>
-                    }
+                            {habits.length !== 0 &&
+                                habits.map((habit, index) => (
+                                    <Habit 
+                                        key={index} 
+                                        info={habit.name} 
+                                        days={habit.days} 
+                                        habitId={habit.id} 
+                                        updateHabits={getHabits} 
+                                        token={userData.token}
+                                    />
+                                ))
+                            }
+                        </Container>
+                    </>)
+                }
             </Main>
-            <Menu></Menu>
+            <Menu />
         </PageContainer>
     );
 }

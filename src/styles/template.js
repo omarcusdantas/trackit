@@ -12,46 +12,46 @@ export const LoginContainer = styled.div`
     }
 
     form {
+        height: 300px;
         display: flex;
         flex-direction: column;
         gap: 6px;
-        height: 300px;
         align-items: center;
     }
 
     input {
-        width: 303px;
-        height: 45px;
-        border: 1px solid #D5D5D5;
-        border-radius: 5px;
         font-size: 20px;
         padding: 0 11px;
+        width: 303px;
+        height: 45px;
+        border: 1px solid #d5d5d5;
+        border-radius: 5px;
 
         &::placeholder {
-            color: #DBDBDB;
+            color: #dbdbdb;
         }
     }
 
     button[type="submit"] {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background-color: #52B6FF;
+        background-color: #52b6ff;
         color: #ffffff;
         font-size: 20px;
         width: 303px;
         height: 45px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
         border: none;
         border-radius: 4.6px;
         transition: all 0.3s ease;
 
         &:disabled {
-            background-color: #86CCFF;
+            background-color: #86ccff;
             cursor: default;
         }
 
         &:not(:disabled):hover {
-            background-color: #5470FF;
+            background-color: #5470ff;
         }
     }
 
@@ -59,32 +59,32 @@ export const LoginContainer = styled.div`
         position: relative;
     }
 
-    div>button {
-        position: absolute;
-        padding: 0;
+    div > button {
         background-color: transparent;
         font-size: 30px;
         color: #757575;
+        padding: 0;
+        position: absolute;
         top: 7px;
         right: 7px;
     }
 
     a {
-        margin-top: 25px;
         font-size: 14px;
-        color: #52B6FF;
+        color: #52b6ff;
+        margin-top: 25px;
     }
 
     label {
+        color: #7a7a7a;
+        margin-bottom: 10px;
+        padding: 5px;
+        border: 1px solid #d5d5d5;
+        border-radius: 4.6px;
         display: flex;
         align-items: center;
         justify-content: center;
         gap: 20px;
-        margin-bottom: 10px;
-        border: 1px solid #D5D5D5;
-        color: #7A7A7A;
-        border-radius: 4.6px;
-        padding: 5px;
     }
 
     input[type="checkbox"] {
@@ -94,16 +94,15 @@ export const LoginContainer = styled.div`
 
     #check-password {
         background-color: ${(props) => {
-            if (props.rightPassword) {
-                return;
+            if (!props.rightPassword) {
+                return "#F9C0C0";
             }
-            return "#F9C0C0";
         }};
     }
 `;
 
 export const PageContainer = styled.div`
-    background-color: #F2F2F2;
+    background-color: #f2f2f2;
     min-height: 100vh;
     display: flex;
     justify-content: center;
@@ -127,13 +126,13 @@ export const Title = styled.div`
     h2 {
         text-align: center;
         font-size: 23px;
-        color: #126BA5;
+        color: #126ba5;
     }
 
     button {
+        background-color: #52b6ff;
         width: 40px;
         height: 35px;
-        background-color: #52B6FF;
         border-radius: 4.6px;
         position: absolute;
         right: 0;
@@ -146,7 +145,6 @@ export const Title = styled.div`
             left: 11.7px;
         }
     }
-
 `;
 
 export const Container = styled.div`
@@ -162,4 +160,3 @@ export const Container = styled.div`
         text-align: center;
     }
 `;
-

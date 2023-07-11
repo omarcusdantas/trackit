@@ -1,4 +1,3 @@
-import React from "react";
 import styled from "styled-components";
 import DayButton from "./DayButton";
 import axios from "axios";
@@ -6,17 +5,27 @@ import { FaRegTrashCan } from "react-icons/fa6";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 
-export default function Habit({info, days, habitId, updateHabits, token}) {
+export default function Habit(props) {
+    const { info, days, habitId, updateHabits, token } = props;
     const daysOfWeek = ["S", "M", "T", "W", "T", "F", "S"];
     const MySwal = withReactContent(Swal);
 
+    // Connect to API to delete habit
     function deleteHabit() {
         axios
-            .delete(`https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${habitId}`, { headers: {"Authorization" : `Bearer ${token}`}})
-            .then(() => {updateHabits()})
-            .catch((error) => console.log(error));
+            .delete(`https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${habitId}`, {
+                headers: { Authorization: `Bearer ${token}` },
+            })
+            .then(() => {
+                updateHabits();
+            })
+            .catch((error) => {
+                console.log(error);
+                alert(error);
+            });
     }
 
+    // Habit delete alert
     function confirmDeleteHabit() {
         MySwal.fire({
             title: "Delete habit?",
@@ -25,7 +34,7 @@ export default function Habit({info, days, habitId, updateHabits, token}) {
             denyButtonText: "No",
             width: 300,
             confirmButtonColor: "#52B6FF",
-            icon: "question"
+            icon: "question",
         }).then((result) => {
             if (result.isConfirmed) {
                 deleteHabit();
@@ -37,25 +46,27 @@ export default function Habit({info, days, habitId, updateHabits, token}) {
         <Container>
             <h3>{info}</h3>
             <WeekContainer>
-                {
-                    daysOfWeek.map((day, index) => {
-                        if(days.includes(index)) {
-                            return <DayButton key={index} text={day} isDisabled={true} selected={true}></DayButton>
-                        }
-                        return <DayButton key={index} text={day} isDisabled={true} selected={false}></DayButton>
-                    })
-                }
+                {daysOfWeek.map((day, index) =>
+                    <DayButton 
+                        key={index} 
+                        text={day} 
+                        isDisabled={true} 
+                        selected={days.includes(index)}
+                    />
+                )}
             </WeekContainer>
-            <button onClick={confirmDeleteHabit}><FaRegTrashCan></FaRegTrashCan></button>
+            <button onClick={confirmDeleteHabit}>
+                <FaRegTrashCan />
+            </button>
         </Container>
     );
 }
 
 const Container = styled.div`
-    min-height: 91px;
     background-color: #ffffff;
-    border-radius: 5px;
     padding: 14px 18px;
+    min-height: 91px;
+    border-radius: 5px;
     position: relative;
 
     h3 {
@@ -63,20 +74,19 @@ const Container = styled.div`
         font-size: 20px;
     }
 
-    >button {
+    > button {
         background-color: transparent;
+        font-size: 20px;
         position: absolute;
         top: 10px;
         right: 8px;
         cursor: pointer;
         border: none;
-        font-size: 20px;
     }
-
 `;
 
 const WeekContainer = styled.div`
+    margin-top: 8px;
     display: flex;
     gap: 4px;
-    margin: 8px 0 0px 0;
 `;

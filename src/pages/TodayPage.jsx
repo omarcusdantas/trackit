@@ -1,19 +1,22 @@
-import React from "react";
-import Menu from "../components/Menu";
-import TopBar from "../components/TopBar";
-import DailyHabit from "../components/DailyHabit";
-import { UserContext } from "../UserContext";
+// Page to show and handle daily habits
+
+import { useState, useContext, useEffect } from "react";
 import axios from "axios";
-import { PageContainer, Main, Title, Container } from "../styles/template";
+import dayjs from "dayjs";
 import styled from "styled-components";
-import TodayDate from "../components/TodayDate";
+import { PageContainer, Main, Title, Container } from "../styles/template";
+import Menu from "../components/Menu";
+import TopBar from "../components/TopBar/TopBar";
+import DailyHabit from "../components/DailyHabit/DailyHabit";
 import LoadingScreen from "../components/LoadingScreen";
+import { UserContext } from "../UserContext";
 
 export default function TodayPage() {
-    const { userData, setUserData } = React.useContext(UserContext);
-    const [dailyHabits, setDailyHabits] = React.useState([]);
-    const [pageLoading, setPageLoading] = React.useState(true);
+    const { userData, setUserData } = useContext(UserContext);
+    const [dailyHabits, setDailyHabits] = useState([]);
+    const [pageLoading, setPageLoading] = useState(true);
 
+    // Update progress percentage of daily habits completed
     function updateProgress(habits) {
         let total = 0;
         habits.forEach((habit) => {
@@ -21,29 +24,36 @@ export default function TodayPage() {
                 total++;
             }
         });
+
         const newProgress = Math.round((total / habits.length) * 100);
         setUserData({ ...userData, progress: newProgress });
     }
 
-    function getDailyHabits(setIsLoading) {
+    // Connect to API to get daily habits
+    function getDailyHabits(setIsWaiting) {
         axios
             .get("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/today", {
-                headers: { "Authorization": `Bearer ${userData.token}` }
+                headers: { Authorization: `Bearer ${userData.token}` },
             })
             .then((response) => {
-                if (setIsLoading) {
-                    setIsLoading(false);
+                if (setIsWaiting) {
+                    setIsWaiting(false);
                 }
-                setPageLoading(false);
+                if (pageLoading) {
+                    setPageLoading(false);
+                }
+
                 setDailyHabits(response.data);
                 updateProgress(response.data);
             })
             .catch((error) => {
                 console.log(error);
+                alert(error);
             });
     }
 
-    React.useEffect(() => {
+    // Get daily habits when page loads
+    useEffect(() => {
         if (userData && userData.token) {
             getDailyHabits();
         }
@@ -51,51 +61,52 @@ export default function TodayPage() {
 
     return (
         <PageContainer>
-            <TopBar></TopBar>
+            <TopBar />
             <Main>
-                {   pageLoading? 
-                    <LoadingScreen></LoadingScreen> :
-                    <>
+                {pageLoading ? 
+                    <LoadingScreen /> : 
+                    (<>
                         <Title>
                             <TitleContainer>
-                                <TitleSpace></TitleSpace>
-                                <TodayDate></TodayDate>
+                                <TitleSpace />
+                                <h2>{dayjs().format("dddd, DD/M")}</h2>
                                 <ProgressContainer dailyProgress={userData && userData.progress}>
-                                    {userData &&
-                                        (userData.progress === 0 || isNaN(userData.progress)
-                                            ? `No habits completed yet`
-                                            : `${userData.progress}% of habits completed`)}
+                                    {(userData.progress === 0 || isNaN(userData.progress))? 
+                                        `No habits completed yet` : `${userData.progress}% of habits completed`
+                                    }
                                 </ProgressContainer>
                             </TitleContainer>
                         </Title>
                         <Container>
-                            {dailyHabits.length === 0 && <p>Nothing to do today.</p>}
-                            {dailyHabits.length !== 0 &&
+                            {dailyHabits.length === 0? 
+                                <p>Nothing to do today.</p> :                            
                                 dailyHabits.map((dailyHabit, index) => (
                                     <DailyHabit
                                         key={index}
                                         info={dailyHabit}
                                         token={userData.token}
                                         updateDailyHabits={getDailyHabits}
-                                    ></DailyHabit>
-                                ))}
+                                        isDisabled={false}
+                                    />
+                                ))
+                            }
                         </Container>
-                    </>
+                    </>)
                 }
             </Main>
-            <Menu></Menu>
+            <Menu />
         </PageContainer>
     );
 }
 
 const ProgressContainer = styled.p`
     font-size: 18px;
-    
+
     color: ${(props) => {
         if (props.dailyProgress === 0 || isNaN(props.dailyProgress)) {
-            return "#BABABA";
+            return "#bababa";
         }
-        return "#8FC549";
+        return "#8fc549";
     }};
 `;
 

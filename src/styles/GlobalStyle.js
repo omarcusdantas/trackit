@@ -21,8 +21,8 @@ const GlobalStyle = createGlobalStyle`
     }
 
     .swal2-icon {
-        justify-self: center;
         margin-top: 20px;
+        justify-self: center;
     }
 `;
 

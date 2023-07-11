@@ -5,10 +5,10 @@ export default function LoadingScreen() {
     return (
         <Container>
             <RotatingLines 
-                strokeColor="#52B6FF"
+                strokeColor="#52b6ff"
                 strokeWidth="4"
                 width="80"
-            ></RotatingLines>
+            />
         </Container>
     );
 }

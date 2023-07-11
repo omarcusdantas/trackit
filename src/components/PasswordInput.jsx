@@ -1,19 +1,29 @@
 import { useState } from "react";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 
-export default function PasswordInput({isSignup, inputPasswordRef, isDisabled, setRightPassword, repeatPassword, setRepeatPassword}) {
+export default function PasswordInput(props) {
+    const {
+        isSignup,
+        inputPassword,
+        setInputPassword,
+        isDisabled,
+        setRightPassword,
+        repeatPassword,
+        setRepeatPassword,
+    } = props;
     const [showPassword, setShowPassword] = useState(false);
 
+    // Change password visibility
     function togglePassword() {
         setShowPassword(!showPassword);
-    };
+    }
 
-    function passwordsMatch(event) {
-        setRepeatPassword(event.target.value);
+    // Check if passwords match
+    function passwordsMatch(newPass) {
+        setRepeatPassword(newPass);
 
-        if (inputPasswordRef.current.value !== event.target.value) {
-            setRightPassword(false);
-            return;
+        if (inputPassword !== newPass) {
+            return setRightPassword(false);
         }
         setRightPassword(true);
     }
@@ -24,23 +34,24 @@ export default function PasswordInput({isSignup, inputPasswordRef, isDisabled, s
                 <input
                     type={showPassword ? "text" : "password"}
                     placeholder="password"
-                    ref={inputPasswordRef}
+                    onChange={(event) => setInputPassword(event.target.value)}
+                    value={inputPassword}
                     disabled={isDisabled}
-                    minLength={isSignup? "4" : undefined}
-                    maxLength={isSignup? "20" : undefined}
+                    minLength={isSignup ? "4" : undefined}
+                    maxLength={isSignup ? "20" : undefined}
                     name="password"
                     required
                 />
                 <button type="button" onClick={togglePassword}>
-                    {showPassword? <AiOutlineEyeInvisible/> : <AiOutlineEye/>}
+                    {showPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
                 </button>
             </div>
-            {   isSignup &&
+            {isSignup && 
                 <input
                     type={showPassword ? "text" : "password"}
                     placeholder="repeat password"
                     id="check-password"
-                    onChange={(event) => passwordsMatch(event)}
+                    onChange={(event) => passwordsMatch(event.target.value)}
                     value={repeatPassword}
                     disabled={isDisabled}
                     required

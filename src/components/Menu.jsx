@@ -1,4 +1,4 @@
-import React from "react";
+import { useContext } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
@@ -6,17 +6,15 @@ import "react-circular-progressbar/dist/styles.css";
 import { UserContext } from "../UserContext";
 
 export default function Menu() {
-    const { userData } = React.useContext(UserContext);
+    const { userData } = useContext(UserContext);
 
     return (
         <MenuBar>
             <MenuContainer>
-                <Link to="/habits">
-                    Habits
-                </Link>
+                <Link to="/habits">Habits</Link>
                 <Link to="/today">
                     <ProgressContainer>
-                        {userData && (
+                        {userData && 
                             <CircularProgressbar
                                 value={userData.progress || 0}
                                 text={"Today"}
@@ -29,12 +27,10 @@ export default function Menu() {
                                     trailColor: "transparent",
                                 })}
                             />
-                        )}
+                        }
                     </ProgressContainer>
                 </Link>
-                <Link to="/history">
-                    History
-                </Link>
+                <Link to="/history">History</Link>
             </MenuContainer>
         </MenuBar>
     );
@@ -43,21 +39,21 @@ export default function Menu() {
 const MenuBar = styled.div`
     background-color: #ffffff;
     width: 100%;
+    height: 70px;
     position: fixed;
     bottom: 0;
     display: flex;
     justify-content: center;
-    height: 70px;
     z-index: 1;
 `;
 
 const MenuContainer = styled.div`
     width: 375px;
+    padding: 0 36px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     position: relative;
-    padding: 0 36px;
 
     a {
         font-size: 18px;
