@@ -26,7 +26,7 @@ export default function LoginPage() {
         };
 
         axios
-            .post("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/auth/login", data)
+            .post(`${import.meta.env.VITE_API_URL}/signin`, data)
             .then((response) => {
                 setIsDisabled(false);
                 const newUserData = {
@@ -44,7 +44,13 @@ export default function LoginPage() {
             })
             .catch((error) => {
                 setIsDisabled(false);
-                alert(error);
+                console.log(error);
+                if (error.response) {
+                    return alert(
+                        `${error.response.data} Error ${error.response.status}: ${error.response.statusText}`
+                    );
+                }
+                alert(error.message);
             });
     }
 

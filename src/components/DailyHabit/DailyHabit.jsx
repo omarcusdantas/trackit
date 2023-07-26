@@ -14,7 +14,7 @@ export default function DailyHabit(props) {
 
         if (info.done) {
             axios
-                .post(`https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${info.id}/uncheck`, "", {
+                .post(`${import.meta.env.VITE_API_URL}/daily-habits/${info.id}/uncheck`, "", {
                     headers: { Authorization: `Bearer ${token}` },
                 })
                 .then(() => {
@@ -23,12 +23,17 @@ export default function DailyHabit(props) {
                 .catch((error) => {
                     setIsWaiting(false);
                     console.log(error);
-                    alert(error);
+                    if (error.response) {
+                        return alert(
+                            `${error.response.data} Error ${error.response.status}: ${error.response.statusText}`
+                        );
+                    }
+                    alert(error.message);
                 });
             return;
         }
         axios
-            .post(`https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${info.id}/check`, "", {
+            .post(`${import.meta.env.VITE_API_URL}/daily-habits/${info.id}/check`, "", {
                 headers: { Authorization: `Bearer ${token}` },
             })
             .then(() => {
@@ -37,7 +42,10 @@ export default function DailyHabit(props) {
             .catch((error) => {
                 setIsWaiting(false);
                 console.log(error);
-                alert(error);
+                if (error.response) {
+                    return alert(`${error.response.data} Error ${error.response.status}: ${error.response.statusText}`);
+                }
+                alert(error.message);
             });
     }
 
@@ -50,30 +58,32 @@ export default function DailyHabit(props) {
                         <p>
                             Current streak:{" "}
                             <HabitInfo habitStatus={info.done} habitHighest={false}>
-                                {info.currentSequence === 1 ? `1 day` : `${info.currentSequence} days`}
+                                {info.done? 
+                                    (info.currentSequence === 0? `1 day` : `${info.currentSequence + 1} days`):
+                                    (info.currentSequence === 1? `1 day` : `${info.currentSequence} days`)
+                                }
                             </HabitInfo>
                         </p>
                         <p>
                             Highest streak:{" "}
                             <HabitInfo
-                                habitHighest={info.currentSequence > 0 && info.currentSequence >= info.highestSequence}
+                                habitHighest={
+                                    info.currentSequence >= info.highestSequence &&
+                                    (info.done || info.highestSequence > 0)
+                                }
                                 habitStatus={false}
                             >
-                                {info.highestSequence === 1 ? `1 day` : `${info.highestSequence} days`}
+                                {info.done? 
+                                    (info.highestSequence === 0? `1 day` : `${info.highestSequence + 1} days`):
+                                    (info.highestSequence === 1? `1 day` : `${info.highestSequence} days`)
+                                }
                             </HabitInfo>
                         </p>
                     </div>
                 )}
             </Text>
-            <Check 
-                onClick={handleHabit} 
-                habitStatus={info.done} 
-                disabled={isDisabled || isWaiting}
-            >
-                {isWaiting ? 
-                    <TailSpin width="40" radius="0" color="#ffffff" /> : 
-                    <img src={checkImg} alt="Check" />
-                }
+            <Check onClick={handleHabit} habitStatus={info.done} disabled={isDisabled || isWaiting}>
+                {isWaiting ? <TailSpin width="40" radius="0" color="#ffffff" /> : <img src={checkImg} alt="Check" />}
             </Check>
         </Container>
     );

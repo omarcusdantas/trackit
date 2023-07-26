@@ -32,7 +32,7 @@ export default function TodayPage() {
     // Connect to API to get daily habits
     function getDailyHabits(setIsWaiting) {
         axios
-            .get("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/today", {
+            .get(`${import.meta.env.VITE_API_URL}/daily-habits`, {
                 headers: { Authorization: `Bearer ${userData.token}` },
             })
             .then((response) => {
@@ -42,13 +42,17 @@ export default function TodayPage() {
                 if (pageLoading) {
                     setPageLoading(false);
                 }
-
                 setDailyHabits(response.data);
                 updateProgress(response.data);
             })
             .catch((error) => {
                 console.log(error);
-                alert(error);
+                if (error.response) {
+                    return alert(
+                        `${error.response.data} Error ${error.response.status}: ${error.response.statusText}`
+                    );
+                }
+                alert(error.message);
             });
     }
 
@@ -63,23 +67,25 @@ export default function TodayPage() {
         <PageContainer>
             <TopBar />
             <Main>
-                {pageLoading ? 
-                    <LoadingScreen /> : 
-                    (<>
+                {pageLoading ? (
+                    <LoadingScreen />
+                ) : (
+                    <>
                         <Title>
                             <TitleContainer>
                                 <TitleSpace />
                                 <h2>{dayjs().format("dddd, DD/M")}</h2>
                                 <ProgressContainer dailyProgress={userData && userData.progress}>
-                                    {(userData.progress === 0 || isNaN(userData.progress))? 
-                                        `No habits completed yet` : `${userData.progress}% of habits completed`
-                                    }
+                                    {userData.progress === 0 || isNaN(userData.progress)
+                                        ? `No habits completed yet`
+                                        : `${userData.progress}% of habits completed`}
                                 </ProgressContainer>
                             </TitleContainer>
                         </Title>
                         <Container>
-                            {dailyHabits.length === 0? 
-                                <p>Nothing to do today.</p> :                            
+                            {dailyHabits.length === 0 ? (
+                                <p>Nothing to do today.</p>
+                            ) : (
                                 dailyHabits.map((dailyHabit, index) => (
                                     <DailyHabit
                                         key={index}
@@ -89,10 +95,10 @@ export default function TodayPage() {
                                         isDisabled={false}
                                     />
                                 ))
-                            }
+                            )}
                         </Container>
-                    </>)
-                }
+                    </>
+                )}
             </Main>
             <Menu />
         </PageContainer>

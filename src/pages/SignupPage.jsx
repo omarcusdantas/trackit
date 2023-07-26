@@ -47,25 +47,36 @@ export default function RegisterPage() {
     // Send signup information to API
     function sendInfo(data) {
         axios
-            .post("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/auth/sign-up", data)
+            .post(`${import.meta.env.VITE_API_URL}/signup`, data)
             .then(() => successSignup())
             .catch((error) => {
                 setIsDisabled(false);
-                if (error.response && error.response.status === 409) {
-                    return alert("Email is already registered");
+                console.log(error);
+                if (error.response) {
+                    return alert(
+                        `${error.response.data} Error ${error.response.status}: ${error.response.statusText}`
+                    );
                 }
-                alert(error);
+                alert(error.message);
             });
+    }
+
+    // Get user's UTC offset
+    function getUserUtcOffset() {
+        const now = new Date();
+        const offsetInMinutes = -now.getTimezoneOffset();
+        const offsetInHours = offsetInMinutes / 60;
+        return offsetInHours;
     }
 
     // Validate form inputs
     function handleForm(event) {
         event.preventDefault();
         const data = {
-            email: inputRefs.current.value,
-            name: inputRefEmail.current.value,
-            image: "https://http.cat/411.jpg",
+            email: inputRefEmail.current.value,
+            name: inputRefName.current.value,
             password: inputPassword,
+            utcOffset: getUserUtcOffset(),
         };
 
         if (data.password !== repeatPassword) {

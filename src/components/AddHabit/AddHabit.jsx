@@ -41,7 +41,7 @@ export default function AddHabit(props) {
         };
 
         axios
-            .post("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits", data, {
+            .post(`${import.meta.env.VITE_API_URL}/habits`, data, {
                 headers: { Authorization: `Bearer ${token}` },
             })
             .then(() => {
@@ -49,8 +49,14 @@ export default function AddHabit(props) {
                 toggleAddHabit();
             })
             .catch((error) => {
-                alert(error);
                 setIsDisabled(false);
+                console.log(error);
+                if (error.response) {
+                    return alert(
+                        `${error.response.data} Error ${error.response.status}: ${error.response.statusText}`
+                    );
+                }
+                alert(error.message);
             });
     }
 

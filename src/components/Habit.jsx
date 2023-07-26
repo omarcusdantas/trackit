@@ -13,7 +13,7 @@ export default function Habit(props) {
     // Connect to API to delete habit
     function deleteHabit() {
         axios
-            .delete(`https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${habitId}`, {
+            .delete(`${import.meta.env.VITE_API_URL}/habits/${habitId}`, {
                 headers: { Authorization: `Bearer ${token}` },
             })
             .then(() => {
@@ -21,7 +21,12 @@ export default function Habit(props) {
             })
             .catch((error) => {
                 console.log(error);
-                alert(error);
+                if (error.response) {
+                    return alert(
+                        `${error.response.data} Error ${error.response.status}: ${error.response.statusText}`
+                    );
+                }
+                alert(error.message);
             });
     }
 

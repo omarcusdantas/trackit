@@ -65,7 +65,7 @@ export default function HistoricPage() {
     useEffect(() => {
         if (userData && userData.token) {
             axios
-                .get("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/history/daily", {
+                .get(`${import.meta.env.VITE_API_URL}/history`, {
                     headers: { Authorization: `Bearer ${userData.token}` },
                 })
                 .then((response) => {
@@ -77,7 +77,12 @@ export default function HistoricPage() {
                 })
                 .catch((error) => {
                     console.log(error);
-                    alert(error);
+                    if (error.response) {
+                        return alert(
+                            `${error.response.data} Error ${error.response.status}: ${error.response.statusText}`
+                        );
+                    }
+                    alert(error.message);
                 });
         }
     }, []);

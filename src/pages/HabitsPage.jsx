@@ -19,7 +19,7 @@ export default function HabitsPage() {
     // Get user's habits from API
     function getHabits() {
         axios
-            .get("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits", {
+            .get(`${import.meta.env.VITE_API_URL}/habits`, {
                 headers: {"Authorization" : `Bearer ${userData.token}` },
             })
             .then((response) => {
@@ -31,7 +31,12 @@ export default function HabitsPage() {
             })
             .catch((error) => {
                 console.log(error);
-                alert(error);
+                if (error.response) {
+                    return alert(
+                        `${error.response.data} Error ${error.response.status}: ${error.response.statusText}`
+                    );
+                }
+                alert(error.message);
             });
     }
 
