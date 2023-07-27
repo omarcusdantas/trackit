@@ -14,7 +14,7 @@ export default function DailyHabit(props) {
 
         if (info.done) {
             axios
-                .post(`${import.meta.env.VITE_API_URL}/daily-habits/${info.id}/uncheck`, "", {
+                .put(`${import.meta.env.VITE_API_URL}/daily-habits/${info.id}/uncheck`, "", {
                     headers: { Authorization: `Bearer ${token}` },
                 })
                 .then(() => {
@@ -33,7 +33,7 @@ export default function DailyHabit(props) {
             return;
         }
         axios
-            .post(`${import.meta.env.VITE_API_URL}/daily-habits/${info.id}/check`, "", {
+            .put(`${import.meta.env.VITE_API_URL}/daily-habits/${info.id}/check`, "", {
                 headers: { Authorization: `Bearer ${token}` },
             })
             .then(() => {

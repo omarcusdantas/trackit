@@ -26,7 +26,7 @@ export default function HistoricPage() {
     function handleDateChange(date) {
         const formattedDate = dayjs(date).format("DD/MM/YYYY");
         const formattedDay = dayjs(date).format("dddd");
-        const habitsOfDay = pageState.history.find((item) => item.day === formattedDate);
+        const habitsOfDay = pageState.history.find((day) => day.date === formattedDate);
 
         if (habitsOfDay && formattedDate !== dayjs().format("DD/MM/YYYY")) {
             setPageState({
@@ -49,7 +49,7 @@ export default function HistoricPage() {
 
         const formattedDate = dayjs(date).format("DD/MM/YYYY");
         const today = dayjs().format("DD/MM/YYYY");
-        const habitsOfDay = pageState.history.find((item) => item.day === formattedDate);
+        const habitsOfDay = pageState.history.find((day) => day.date === formattedDate);
 
         if (formattedDate === today) {
             return null;
@@ -69,6 +69,7 @@ export default function HistoricPage() {
                     headers: { Authorization: `Bearer ${userData.token}` },
                 })
                 .then((response) => {
+                    console.log(response.data)
                     setPageState({
                         ...pageState,
                         history: response.data,
