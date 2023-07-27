@@ -69,7 +69,6 @@ export default function HistoricPage() {
                     headers: { Authorization: `Bearer ${userData.token}` },
                 })
                 .then((response) => {
-                    console.log(response.data)
                     setPageState({
                         ...pageState,
                         history: response.data,
