@@ -111,12 +111,12 @@ const CalendarContainer = styled.div`
         }
 
         .done {
-            background: url("../src/assets/greencircle.svg") center no-repeat;
+            background: url("/greencircle.svg") center no-repeat;
             color: #000000;
         }
 
         .not-done {
-            background: url("../src/assets/redcircle.svg") center no-repeat;
+            background: url("/redcircle.svg") center no-repeat;
             color: #000000;
         }
     }
