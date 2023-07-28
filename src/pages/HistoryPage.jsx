@@ -11,6 +11,7 @@ import DailyHabit from "../components/DailyHabit/DailyHabit";
 import LoadingScreen from "../components/LoadingScreen";
 import Menu from "../components/Menu";
 import TopBar from "../components/TopBar/TopBar";
+import { useNavigate } from "react-router-dom";
 
 export default function HistoricPage() {
     const { userData } = useContext(UserContext);
@@ -21,6 +22,7 @@ export default function HistoricPage() {
         pageLoading: true,
     });
     const [selectedDate, setSelectedDate] = useState(null);
+    const navigate = useNavigate();
 
     // Check if there is any daily habit on clicked day and shows on screen
     function handleDateChange(date) {
@@ -77,6 +79,8 @@ export default function HistoricPage() {
                 })
                 .catch((error) => {
                     console.log(error);
+                    localStorage.removeItem("user");
+                    navigate("/");
                     if (error.response) {
                         return alert(
                             `${error.response.data} Error ${error.response.status}: ${error.response.statusText}`

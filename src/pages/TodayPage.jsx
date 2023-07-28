@@ -10,11 +10,13 @@ import TopBar from "../components/TopBar/TopBar";
 import DailyHabit from "../components/DailyHabit/DailyHabit";
 import LoadingScreen from "../components/LoadingScreen";
 import { UserContext } from "../UserContext";
+import { useNavigate } from "react-router-dom";
 
 export default function TodayPage() {
     const { userData, setUserData } = useContext(UserContext);
     const [dailyHabits, setDailyHabits] = useState([]);
     const [pageLoading, setPageLoading] = useState(true);
+    const navigate = useNavigate();
 
     // Update progress percentage of daily habits completed
     function updateProgress(habits) {
@@ -47,6 +49,8 @@ export default function TodayPage() {
             })
             .catch((error) => {
                 console.log(error);
+                localStorage.removeItem("user");
+                navigate("/");
                 if (error.response) {
                     return alert(
                         `${error.response.data} Error ${error.response.status}: ${error.response.statusText}`

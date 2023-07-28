@@ -9,12 +9,14 @@ import Menu from "../components/Menu";
 import TopBar from "../components/TopBar/TopBar";
 import AddHabit from "../components/AddHabit/AddHabit";
 import Habit from "../components/Habit";
+import { useNavigate } from "react-router-dom";
 
 export default function HabitsPage() {
     const [isAddHabit, setIsAddHabit] = useState(false);
     const [habits, setHabits] = useState([]);
     const { userData } = useContext(UserContext);
     const [pageLoading, setPageLoading] = useState(true);
+    const navigate = useNavigate();
 
     // Get user's habits from API
     function getHabits() {
@@ -31,6 +33,8 @@ export default function HabitsPage() {
             })
             .catch((error) => {
                 console.log(error);
+                localStorage.removeItem("user");
+                navigate("/");
                 if (error.response) {
                     return alert(
                         `${error.response.data} Error ${error.response.status}: ${error.response.statusText}`
