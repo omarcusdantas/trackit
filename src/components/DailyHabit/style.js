@@ -22,6 +22,7 @@ export const Text = styled.div`
         font-size: 13px;
         color: #666666;
         line-height: 16px;
+        text-align: left;
     }
 `;
 
