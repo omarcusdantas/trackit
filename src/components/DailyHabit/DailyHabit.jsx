@@ -58,25 +58,18 @@ export default function DailyHabit(props) {
                         <p>
                             Current streak:{" "}
                             <HabitInfo habitStatus={info.done} habitHighest={false}>
-                                {info.done? 
-                                    (info.currentSequence === 0? `1 day` : `${info.currentSequence + 1} days`):
-                                    (info.currentSequence === 1? `1 day` : `${info.currentSequence} days`)
-                                }
+                                {info.currentSequence === 1? `1 day` : `${info.currentSequence} days`}
                             </HabitInfo>
                         </p>
                         <p>
                             Highest streak:{" "}
                             <HabitInfo
                                 habitHighest={
-                                    info.currentSequence >= info.highestSequence &&
-                                    (info.done || info.highestSequence > 0)
+                                    info.currentSequence > 0 && info.currentSequence >= info.highestSequence
                                 }
                                 habitStatus={false}
                             >
-                                {info.done? 
-                                    (info.highestSequence === 0? `1 day` : `${info.highestSequence + 1} days`):
-                                    (info.highestSequence === 1? `1 day` : `${info.highestSequence} days`)
-                                }
+                                {info.highestSequence === 1? `1 day` : `${info.highestSequence} days`}
                             </HabitInfo>
                         </p>
                     </div>
