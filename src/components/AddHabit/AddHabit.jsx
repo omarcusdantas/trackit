@@ -82,7 +82,7 @@ export default function AddHabit(props) {
                 ))}
             </WeekContainer>
             <ButtonContainer>
-                <button onClick={toggleAddHabit} disabled={isDisabled}>
+                <button onClick={() => toggleAddHabit()} disabled={isDisabled}>
                     Cancel
                 </button>
                 <button onClick={registerHabit} disabled={isDisabled}>
