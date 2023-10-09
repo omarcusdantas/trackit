@@ -1,10 +1,10 @@
 import { useRef, useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { UserContext } from "../UserContext";
-import axios from "axios";
 import { ThreeDots } from "react-loader-spinner";
-import { LoginContainer } from "../styles/template";
+import { UserContext } from "../context/UserContext";
 import PasswordInput from "../components/PasswordInput";
+import authService from "../services/authService";
+import { FormContainer } from "../styles/Template";
 import logo from "../assets/logo.png";
 
 export default function LoginPage() {
@@ -15,46 +15,37 @@ export default function LoginPage() {
     const { setUserData } = useContext(UserContext);
     const navigate = useNavigate();
 
-    // Send inputs to API and store user's login info in local storage if persistence is enabled
-    function handleForm(event) {
+    function successSignin(userData) {
+        setIsDisabled(false);
+        const newUserData = {
+            name: userData.name,
+            token: userData.token,
+            progress: 0,
+        };
+        setUserData(newUserData);
+
+        if (persistenceRef.current.checked) {
+            localStorage.setItem("user", JSON.stringify(newUserData));
+        }
+        navigate("/today");
+    }
+
+    async function trySignin(event) {
         event.preventDefault();
         setIsDisabled(true);
-
         const data = {
             email: inputRefEmail.current.value,
             password: inputPassword,
         };
 
-        axios
-            .post(`${import.meta.env.VITE_API_URL}/signin`, data)
-            .then((response) => {
-                setIsDisabled(false);
-                const newUserData = {
-                    name: response.data.name,
-                    token: response.data.token,
-                    progress: 0,
-                };
-                setUserData(newUserData);
-
-                if (persistenceRef.current.checked) {
-                    localStorage.setItem("user", JSON.stringify(newUserData));
-                }
-
-                navigate("/today");
-            })
-            .catch((error) => {
-                setIsDisabled(false);
-                console.log(error);
-                if (error.response) {
-                    return alert(
-                        `${error.response.data} Error ${error.response.status}: ${error.response.statusText}`
-                    );
-                }
-                alert(error.message);
-            });
+        try {
+            const userData = await authService.signin(data);
+            successSignin(userData);
+        } catch (error) {
+            setIsDisabled(false);
+        }
     }
 
-    // Check if user login information is saved on local storage
     useEffect(() => {
         const storedUser = localStorage.getItem("user");
 
@@ -66,9 +57,9 @@ export default function LoginPage() {
     }, []);
 
     return (
-        <LoginContainer>
+        <FormContainer>
             <img src={logo} alt="TrackIt" />
-            <form onSubmit={handleForm}>
+            <form onSubmit={trySignin}>
                 <input
                     type="email"
                     placeholder="email"
@@ -84,20 +75,14 @@ export default function LoginPage() {
                     isDisabled={isDisabled}
                 />
                 <label>
-                    <input 
-                        type="checkbox" 
-                        ref={persistenceRef}
-                        disabled={isDisabled} 
-                    />
+                    <input type="checkbox" ref={persistenceRef} disabled={isDisabled} />
                     Remember me
                 </label>
                 <button type="submit" disabled={isDisabled}>
                     {isDisabled ? <ThreeDots height="13px" color="#ffffff" /> : "Login"}
                 </button>
-                <Link to="/sign-up">
-                    Don't have an account? Sign up!
-                </Link>
+                <Link to="/sign-up">Don't have an account? Sign up!</Link>
             </form>
-        </LoginContainer>
+        </FormContainer>
     );
 }

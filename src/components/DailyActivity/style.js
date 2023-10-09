@@ -30,7 +30,7 @@ export const HabitInfo = styled.span`
     font-size: 13px;
 
     color: ${(props) => {
-        if (props.habitStatus || props.habitHighest) {
+        if (props.$status || props.$highest) {
             return "#8FC549";
         }
         return "#666666";
@@ -47,7 +47,7 @@ export const Check = styled.button`
     align-items: center;
 
     background-color: ${(props) => {
-        if (props.habitStatus) {
+        if (props.$status) {
             return "#8FC549";
         }
         return "#EBEBEB";
@@ -55,7 +55,7 @@ export const Check = styled.button`
 
     border: 1px solid
         ${(props) => {
-            if (props.habitSstatus) {
+            if (props.$status) {
                 return "#8FC549";
             }
             return "#E7E7E7";

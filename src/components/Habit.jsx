@@ -1,36 +1,24 @@
 import styled from "styled-components";
-import DayButton from "./DayButton";
-import axios from "axios";
-import { FaRegTrashCan } from "react-icons/fa6";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import DayButton from "./DayButton";
+import { FaRegTrashCan } from "react-icons/fa6";
+import daysOfWeek from "../utils/daysOfWeek";
+import habitServices from "../services/habitsService";
 
 export default function Habit(props) {
     const { info, days, habitId, updateHabits, token } = props;
-    const daysOfWeek = ["S", "M", "T", "W", "T", "F", "S"];
     const MySwal = withReactContent(Swal);
-
-    // Connect to API to delete habit
-    function deleteHabit() {
-        axios
-            .delete(`${import.meta.env.VITE_API_URL}/habits/${habitId}`, {
-                headers: { Authorization: `Bearer ${token}` },
-            })
-            .then(() => {
-                updateHabits();
-            })
-            .catch((error) => {
-                console.log(error);
-                if (error.response) {
-                    return alert(
-                        `${error.response.data} Error ${error.response.status}: ${error.response.statusText}`
-                    );
-                }
-                alert(error.message);
-            });
+ 
+    async function tryDeleteHabit() {
+        try {
+            await habitServices.deleteById(habitId, token);
+            updateHabits();
+        } catch (error) {
+            return;
+        }
     }
 
-    // Habit delete alert
     function confirmDeleteHabit() {
         MySwal.fire({
             title: "Delete habit?",
@@ -42,7 +30,7 @@ export default function Habit(props) {
             icon: "question",
         }).then((result) => {
             if (result.isConfirmed) {
-                deleteHabit();
+                tryDeleteHabit();
             }
         });
     }

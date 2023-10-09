@@ -1,15 +1,13 @@
-// Page to add and exclude habits
-
 import { useEffect, useState, useContext } from "react";
-import { UserContext } from "../UserContext";
-import axios from "axios";
-import { PageContainer, Main, Title, Container } from "../styles/template";
+import { useNavigate } from "react-router-dom";
 import LoadingScreen from "../components/LoadingScreen";
 import Menu from "../components/Menu";
 import TopBar from "../components/TopBar/TopBar";
 import AddHabit from "../components/AddHabit/AddHabit";
 import Habit from "../components/Habit";
-import { useNavigate } from "react-router-dom";
+import { UserContext } from "../context/UserContext";
+import habitsService from "../services/habitsService";
+import { PageContainer, Main, Title, Container } from "../styles/Template";
 
 export default function HabitsPage() {
     const [isAddHabit, setIsAddHabit] = useState(false);
@@ -18,33 +16,23 @@ export default function HabitsPage() {
     const [pageLoading, setPageLoading] = useState(true);
     const navigate = useNavigate();
 
-    // Get user's habits from API
-    function getHabits() {
-        axios
-            .get(`${import.meta.env.VITE_API_URL}/habits`, {
-                headers: {"Authorization" : `Bearer ${userData.token}` },
-            })
-            .then((response) => {
-                if (pageLoading) {
-                    setPageLoading(false);
-                }
-
-                setHabits(response.data);
-            })
-            .catch((error) => {
-                console.log(error);
-                localStorage.removeItem("user");
-                navigate("/");
-                if (error.response) {
-                    return alert(
-                        `${error.response.data} Error ${error.response.status}: ${error.response.statusText}`
-                    );
-                }
-                alert(error.message);
-            });
+    function toggleAddHabit() {
+        setIsAddHabit(!isAddHabit);
     }
 
-    // Get user's habits when page loads
+    async function getHabits() {
+        try {
+            const habits = await habitsService.get(userData.token);
+            setHabits(habits);
+            if (pageLoading) {
+                setPageLoading(false);
+            }
+        } catch (error) {
+            localStorage.removeItem("user");
+            navigate("/");
+        }
+    }
+
     useEffect(() => {
         if (userData && userData.token) {
             getHabits();
@@ -55,40 +43,34 @@ export default function HabitsPage() {
         <PageContainer>
             <TopBar />
             <Main>
-                {pageLoading?
-                    <LoadingScreen /> :
-                    (<>
+                {pageLoading && <LoadingScreen />}
+                {!pageLoading && (
+                    <>
                         <Title>
                             <h2>My Habits</h2>
-                            <button onClick={() => setIsAddHabit(!isAddHabit)}><p>+</p></button>
+                            <button onClick={toggleAddHabit}>
+                                <p>+</p>
+                            </button>
                         </Title>
-                        {   
-                            isAddHabit &&
-                            <AddHabit 
-                                toggleAddHabit={setIsAddHabit} 
-                                updateHabits={getHabits} 
-                                token={userData.token}
-                            />
-                        }
+                        {isAddHabit && (
+                            <AddHabit toggleAddHabit={setIsAddHabit} updateHabits={getHabits} token={userData.token} />
+                        )}
                         <Container>
-                            {habits.length == 0 &&
-                                <p>Add a habit to start tracking it</p>
-                            }
+                            {habits.length == 0 && <p>Add a habit to start tracking it</p>}
                             {habits.length !== 0 &&
                                 habits.map((habit, index) => (
-                                    <Habit 
-                                        key={index} 
-                                        info={habit.name} 
-                                        days={habit.days} 
-                                        habitId={habit.id} 
-                                        updateHabits={getHabits} 
+                                    <Habit
+                                        key={index}
+                                        info={habit.name}
+                                        days={habit.days}
+                                        habitId={habit.id}
+                                        updateHabits={getHabits}
                                         token={userData.token}
                                     />
-                                ))
-                            }
+                                ))}
                         </Container>
-                    </>)
-                }
+                    </>
+                )}
             </Main>
             <Menu />
         </PageContainer>

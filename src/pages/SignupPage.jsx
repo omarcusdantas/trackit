@@ -2,10 +2,10 @@ import { useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
-import axios from "axios";
-import { LoginContainer } from "../styles/template";
 import { ThreeDots } from "react-loader-spinner";
 import PasswordInput from "../components/PasswordInput";
+import authService from "../services/authService";
+import { FormContainer } from "../styles/Template";
 import logo from "../assets/logo.png";
 
 export default function RegisterPage() {
@@ -18,7 +18,6 @@ export default function RegisterPage() {
     const MySwal = withReactContent(Swal);
     const navigate = useNavigate();
 
-    // Redirect to LoginPage after successful signup 
     function successSignup() {
         setIsDisabled(false);
         let timeoutId;
@@ -44,24 +43,15 @@ export default function RegisterPage() {
             });
     }
 
-    // Send signup information to API
-    function sendInfo(data) {
-        axios
-            .post(`${import.meta.env.VITE_API_URL}/signup`, data)
-            .then(() => successSignup())
-            .catch((error) => {
-                setIsDisabled(false);
-                console.log(error);
-                if (error.response) {
-                    return alert(
-                        `${error.response.data} Error ${error.response.status}: ${error.response.statusText}`
-                    );
-                }
-                alert(error.message);
-            });
+    async function trySignup(data) {
+        try {
+            await authService.signup(data);
+            successSignup();
+        } catch (error) {
+            setIsDisabled(false);
+        }
     }
 
-    // Get user's UTC offset
     function getUserUtcOffset() {
         const now = new Date();
         const offsetInMinutes = -now.getTimezoneOffset();
@@ -69,7 +59,6 @@ export default function RegisterPage() {
         return offsetInHours;
     }
 
-    // Validate form inputs
     function handleForm(event) {
         event.preventDefault();
         const data = {
@@ -87,11 +76,11 @@ export default function RegisterPage() {
         }
 
         setIsDisabled(true);
-        sendInfo(data);
+        trySignup(data);
     }
 
     return (
-        <LoginContainer rightPassword={rightPassword}>
+        <FormContainer rightPassword={rightPassword}>
             <img src={logo} alt="TrackIt" />
             <form onSubmit={handleForm}>
                 <input 
@@ -126,6 +115,6 @@ export default function RegisterPage() {
                 </button>
                 <Link to="/">Do you already have an account? Log in!</Link>
             </form>
-        </LoginContainer>
+        </FormContainer>
     );
 }

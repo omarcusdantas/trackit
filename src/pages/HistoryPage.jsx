@@ -1,17 +1,15 @@
-// Page with calendar to track passed days habits
-
 import { useEffect, useContext, useState } from "react";
-import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
-import { PageContainer, Main, Title, Container } from "../styles/template";
-import CalendarContainer from "../styles/Calendar";
 import Calendar from "react-calendar";
-import { UserContext } from "../UserContext";
-import DailyHabit from "../components/DailyHabit/DailyHabit";
+import { UserContext } from "../context/UserContext";
+import DailyActivity from "../components/DailyActivity/DailyActivity";
 import LoadingScreen from "../components/LoadingScreen";
 import Menu from "../components/Menu";
 import TopBar from "../components/TopBar/TopBar";
-import { useNavigate } from "react-router-dom";
+import historyService from "../services/historyService";
+import { PageContainer, Main, Title, Container } from "../styles/Template";
+import CalendarContainer from "../styles/Calendar";
 
 export default function HistoricPage() {
     const { userData } = useContext(UserContext);
@@ -24,7 +22,10 @@ export default function HistoricPage() {
     const [selectedDate, setSelectedDate] = useState(null);
     const navigate = useNavigate();
 
-    // Check if there is any daily habit on clicked day and shows on screen
+    function disableShowHabits() {
+        setPageState({ ...pageState, showHabits: false });
+    }
+
     function handleDateChange(date) {
         const formattedDate = dayjs(date).format("DD/MM/YYYY");
         const formattedDay = dayjs(date).format("dddd");
@@ -43,7 +44,6 @@ export default function HistoricPage() {
         setSelectedDate(date);
     }
 
-    // Set colors of dates depending on user's completion of daily habits
     function tileClassName({ date, view }) {
         if (view === "year") {
             return null;
@@ -63,77 +63,65 @@ export default function HistoricPage() {
         return null;
     }
 
-    // Get user's history from API
+    async function getHistory() {
+        try {
+            const history = await historyService.get(userData.token);
+            setPageState({
+                ...pageState,
+                history: history,
+                pageLoading: false,
+            });
+        } catch (error) {
+            localStorage.removeItem("user");
+            navigate("/");
+        }
+    }
+
     useEffect(() => {
         if (userData && userData.token) {
-            axios
-                .get(`${import.meta.env.VITE_API_URL}/history`, {
-                    headers: { Authorization: `Bearer ${userData.token}` },
-                })
-                .then((response) => {
-                    setPageState({
-                        ...pageState,
-                        history: response.data,
-                        pageLoading: false,
-                    });
-                })
-                .catch((error) => {
-                    console.log(error);
-                    localStorage.removeItem("user");
-                    navigate("/");
-                    if (error.response) {
-                        return alert(
-                            `${error.response.data} Error ${error.response.status}: ${error.response.statusText}`
-                        );
-                    }
-                    alert(error.message);
-                });
+            getHistory();
         }
     }, []);
 
     return (
         <PageContainer>
             <TopBar />
-            {!pageState.showHabits ?
-                (<Main>
-                    {pageState.pageLoading ?
-                        <LoadingScreen /> :
-                        (<>
-                            <Title>
-                                <h2>History</h2>
-                            </Title>
-                            <CalendarContainer>
-                                <Calendar
-                                    className="react-calendar"
-                                    locale="en-US"
-                                    weekStartsOn={0}
-                                    tileClassName={tileClassName}
-                                    onChange={handleDateChange}
-                                    value={selectedDate}
-                                    maxDate={new Date()}
-                                ></Calendar>
-                            </CalendarContainer>
-                        </>)
-                    }
-                </Main>) :
-                (<Main>
-                    <Title>
+            <Main>
+                {pageState.pageLoading && <LoadingScreen />}
+                {!pageState.pageLoading && !pageState.showHabits && (
+                    <>
+                        <Title>
+                            <h2>History</h2>
+                        </Title>
+                        <CalendarContainer>
+                            <Calendar
+                                className="react-calendar"
+                                locale="en-US"
+                                weekStartsOn={0}
+                                tileClassName={tileClassName}
+                                onChange={handleDateChange}
+                                value={selectedDate}
+                                maxDate={new Date()}
+                            ></Calendar>
+                        </CalendarContainer>
+                    </>
+                )}
+                {!pageState.pageLoading && pageState.showHabits && (
+                    <>
+                        <Title>
                         <h2>{pageState.habitsInfo.date}</h2>
-                        <button onClick={() => setPageState({ ...pageState, showHabits: false })}>
+                        <button onClick={disableShowHabits}>
                             <p>x</p>
                         </button>
                     </Title>
                     <Container>
                         {pageState.habitsInfo.habits.map((dailyHabit, index) => (
-                            <DailyHabit 
-                                key={index}
-                                info={dailyHabit}
-                                isDisabled={true}
-                            />
+                            <DailyActivity key={index} info={dailyHabit} isDisabled={true} />
                         ))}
                     </Container>
-                </Main>)
-            }
+                    </>
+                )}
+            </Main>
             <Menu />
         </PageContainer>
     );

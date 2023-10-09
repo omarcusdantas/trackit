@@ -13,13 +13,11 @@ export default function PasswordInput(props) {
     } = props;
     const [showPassword, setShowPassword] = useState(false);
 
-    // Change password visibility
     function togglePassword() {
         setShowPassword(!showPassword);
     }
 
-    // Check if passwords match
-    function passwordsMatch(newPass) {
+    function doPasswordsMatch(newPass) {
         setRepeatPassword(newPass);
 
         if (inputPassword !== newPass) {
@@ -32,13 +30,13 @@ export default function PasswordInput(props) {
         <>
             <div>
                 <input
-                    type={showPassword? "text" : "password"}
+                    type={showPassword ? "text" : "password"}
                     placeholder="password"
                     onChange={(event) => setInputPassword(event.target.value)}
                     value={inputPassword}
                     disabled={isDisabled}
-                    minLength={isSignup? "4" : undefined}
-                    maxLength={isSignup? "20" : undefined}
+                    minLength={isSignup ? "4" : undefined}
+                    maxLength={isSignup ? "20" : undefined}
                     name="password"
                     required
                 />
@@ -46,17 +44,17 @@ export default function PasswordInput(props) {
                     {showPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
                 </button>
             </div>
-            {isSignup && 
+            {isSignup && (
                 <input
-                    type={showPassword? "text" : "password"}
+                    type={showPassword ? "text" : "password"}
                     placeholder="confirm password"
                     id="check-password"
-                    onChange={(event) => passwordsMatch(event.target.value)}
+                    onChange={(event) => doPasswordsMatch(event.target.value)}
                     value={repeatPassword}
                     disabled={isDisabled}
                     required
                 />
-            }
+            )}
         </>
     );
 }

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
-import { UserContext } from "../UserContext";
+import { UserContext } from "../context/UserContext";
 
 export default function Menu() {
     const { userData } = useContext(UserContext);
@@ -14,7 +14,7 @@ export default function Menu() {
                 <Link to="/habits">Habits</Link>
                 <Link to="/today">
                     <ProgressContainer>
-                        {userData && 
+                        {userData && (
                             <CircularProgressbar
                                 value={userData.progress || 0}
                                 text={"Today"}
@@ -27,7 +27,7 @@ export default function Menu() {
                                     trailColor: "transparent",
                                 })}
                             />
-                        }
+                        )}
                     </ProgressContainer>
                 </Link>
                 <Link to="/history">History</Link>
@@ -36,7 +36,7 @@ export default function Menu() {
     );
 }
 
-const MenuBar = styled.div`
+const MenuBar = styled.footer`
     background-color: #ffffff;
     width: 100%;
     height: 70px;
@@ -47,7 +47,7 @@ const MenuBar = styled.div`
     z-index: 1;
 `;
 
-const MenuContainer = styled.div`
+const MenuContainer = styled.nav`
     width: 375px;
     padding: 0 36px;
     display: flex;

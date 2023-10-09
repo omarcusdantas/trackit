@@ -1,31 +1,18 @@
-import React from "react";
-import axios from "axios";
-import DayButton from "../DayButton";
+import { useState, useRef } from "react";
 import { ThreeDots } from "react-loader-spinner";
+import DayButton from "../DayButton";
+import daysOfWeek from "../../utils/daysOfWeek";
+import habitsService from "../../services/habitsService";
 import { Container, WeekContainer, ButtonContainer } from "./style";
 
 export default function AddHabit(props) {
     const { toggleAddHabit, updateHabits, token } = props;
-    const daysOfWeek = ["S", "M", "T", "W", "T", "F", "S"];
-    const [isDisabled, setIsDisabled] = React.useState(false);
-    const [days, setDays] = React.useState([]);
-    const inputNameRef = React.useRef(null);
 
-    // Add and remove habit's days 
-    function manageDays(day) {
-        const indexToRemove = days.indexOf(day);
+    const [isDisabled, setIsDisabled] = useState(false);
+    const [days, setDays] = useState([]);
+    const inputNameRef = useRef(null);
 
-        if (indexToRemove !== -1) {
-            const updatedDays = [...days];
-            updatedDays.splice(indexToRemove, 1);
-            return setDays(updatedDays);
-        }
-
-        setDays([...days, day]);
-    }
-
-    // Validate habit informations
-    function registerHabit() {
+    async function registerHabit() {
         const inputName = inputNameRef.current.value;
 
         if (inputName === "" || inputName.length < 2) {
@@ -40,35 +27,31 @@ export default function AddHabit(props) {
             days: days,
         };
 
-        axios
-            .post(`${import.meta.env.VITE_API_URL}/habits`, data, {
-                headers: { Authorization: `Bearer ${token}` },
-            })
-            .then(() => {
-                updateHabits();
-                toggleAddHabit();
-            })
-            .catch((error) => {
-                setIsDisabled(false);
-                console.log(error);
-                if (error.response) {
-                    return alert(
-                        `${error.response.data} Error ${error.response.status}: ${error.response.statusText}`
-                    );
-                }
-                alert(error.message);
-            });
+        try {
+            await habitsService.create(data, token);
+            setIsDisabled(false);
+            updateHabits();
+            toggleAddHabit();
+        } catch (error) {
+            setIsDisabled(false);
+        }
+    }
+
+    function manageDays(day) {
+        const indexToRemove = days.indexOf(day);
+
+        if (indexToRemove !== -1) {
+            const updatedDays = [...days];
+            updatedDays.splice(indexToRemove, 1);
+            return setDays(updatedDays);
+        }
+
+        setDays([...days, day]);
     }
 
     return (
         <Container>
-            <input 
-                type="text" 
-                placeholder="habit" 
-                disabled={isDisabled} 
-                ref={inputNameRef} 
-                minLength="2" 
-            />
+            <input type="text" placeholder="habit" disabled={isDisabled} ref={inputNameRef} minLength="2" />
             <WeekContainer>
                 {daysOfWeek.map((day, index) => (
                     <DayButton
@@ -82,7 +65,7 @@ export default function AddHabit(props) {
                 ))}
             </WeekContainer>
             <ButtonContainer>
-                <button onClick={() => toggleAddHabit()} disabled={isDisabled}>
+                <button onClick={toggleAddHabit} disabled={isDisabled}>
                     Cancel
                 </button>
                 <button onClick={registerHabit} disabled={isDisabled}>

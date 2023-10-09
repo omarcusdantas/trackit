@@ -5,18 +5,13 @@ export default function DayButton(props) {
     const { text, isDisabled, selected, handleClick, dayIndex } = props;
     const [isSelected, setIsSelected] = useState(selected);
 
-    // Send selected day to manageDays function
     function toggleSelected() {
         setIsSelected(!isSelected);
         handleClick(dayIndex);
     }
 
     return (
-        <Button 
-            selected={isSelected} 
-            onClick={toggleSelected} 
-            disabled={isDisabled}
-        >
+        <Button $selected={isSelected} onClick={toggleSelected} disabled={isDisabled}>
             {text}
         </Button>
     );
@@ -31,14 +26,14 @@ const Button = styled.button`
     padding: 0;
 
     background-color: ${(props) => {
-        if (props.selected === true) {
+        if (props.$selected) {
             return "#CFCFCF";
         }
         return "#FFFFFF";
     }};
 
     color: ${(props) => {
-        if (props.selected === true) {
+        if (props.$selected) {
             return "#ffffff";
         }
         return "#DBDBDB";
@@ -46,11 +41,11 @@ const Button = styled.button`
 
     border: 1px solid
         ${(props) => {
-            if (props.selected === true) {
+            if (props.$selected) {
                 return "#CFCFCF";
             }
             return "#D5D5D5";
-    }};
+        }};
 
     &:disabled {
         cursor: default;

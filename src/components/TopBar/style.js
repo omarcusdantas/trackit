@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { RiLogoutBoxRLine } from "react-icons/ri";
 
-export const Bar = styled.div`
+export const Bar = styled.header`
     background-color: #126ba5;
     width: 100%;
     height: 70px;
