@@ -13,6 +13,7 @@ This project contains all the files for an web application named TrackIt.
 
 ## :rocket: Deployment
 The project is deployed on [https://trackit-omarcusdantas.vercel.app/](https://trackit-omarcusdantas.vercel.app/)
+Chekout the Docker image on [Docker Hub](https://hub.docker.com/repository/docker/omarcusdantas/trackit/)
 
 ## ✨ Tech
 * [React](https://react.dev/) for the SPA architecture.
