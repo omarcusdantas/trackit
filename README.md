@@ -6,16 +6,20 @@ A web application built with React to manage and track user's habits. It consume
 ## :speech_balloon: Description
 This project contains all the files for an web application named TrackIt. 
 
+* Signup and signin pages to handle user account.
 * Habits page to add and delete habits.
 * Today page to track the activities the user has on the current day.
 * History page to check user's history.
 
-## ✨ Features
-* React for the SPA architecture.
-* Styled Components to handle CSS changes.
-* Axios to handle connection with API.
-* SweetAlert2 to manage alerts.
-* React Calendar/React Icons/React Circular Progress Bar/React Loader Spinner to enhance user experience.
+## :rocket: Deployment
+The project is deployed on [https://trackit-omarcusdantas.vercel.app/](https://trackit-omarcusdantas.vercel.app/)
+
+## ✨ Tech
+* [React](https://react.dev/) for the SPA architecture.
+* [Styled Components](https://styled-components.com/) to handle CSS and CSS dynamic changes.
+* [Axios](https://axios-http.com/) to handle connection with API.
+* [SweetAlert2](https://sweetalert2.github.io/) to manage alerts.
+* [React Calendar](https://projects.wojtekmaj.pl/react-calendar/), [React Icons](https://react-icons.github.io/react-icons/), [React Circular Progress Bar](https://www.npmjs.com/package/react-circular-progressbar) and [React Loader Spinner](https://www.npmjs.com/package/react-loader-spinner) to enhance user experience.
 
 
 ## :computer: Usage
@@ -34,9 +38,6 @@ npm run dev
 * Click on trash icon if you need to exclude a habit.
 * On Today page, check the activities you have to do for the day and check them as completed.
 * On History page, navigate through dates to check the progress each day.
-
-## :rocket: Deployment
-The project is deployed on [https://trackit-omarcusdantas.vercel.app/](https://trackit-omarcusdantas.vercel.app/)
 
 ## :bulb: Contributing
 This project is currently not open for contributions. However, you are welcome to fork the repository and make modifications for personal use.
